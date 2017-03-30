@@ -1,0 +1,74 @@
+Library(ape)
+Library(picante)
+Library(phylobase)
+data(phylocom)
+
+read.newick("PhyloMaticBladJ.newick")
+PhyloMatic_Amb<-read.newick("PhyloMaticBladJ.newick")
+PhyloMatic_Amb=collapse.singles(PhyloMatic)
+write.tree(PhyloMaticBladj, file = "PhyloMaticBladj.tre")
+
+ComunidadAB<-read.csv("ComunidadAb.csv", sep = ",", row.names = 1,header = T)
+Comunidad<-read.csv("Comunidad.csv", sep = ",", row.names = 1,header = T)
+
+prune.sample(ComunidadAB, PhyloMatic_Amb)
+
+cophenetic(PhyloMatic_Amb)
+Dis.PhyloMatic=cophenetic(PhyloMatic_Amb)
+
+
+####################INDICES#########################################
+
+#ses.pd(ComunidadAB, PhyloMatic_Amb, null.model = "taxa.labels")
+PD_PhyloMatic=ses.pd(ComunidadAB, PhyloMatic_Amb, null.model = "taxa.labels")
+write.csv(PD_PhyloMatic, file = "PD_PhyloMatic.csv")
+
+
+#Sin Abundancias#
+
+#ses.mntd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = FALSE, runs = 9999)
+mntdPhyloMatic=ses.mntd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = FALSE, runs = 9999)
+write.csv(mntdPhyloMatic, file = "mntdPhyloMatic.csv")
+
+#ses.mpd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = FALSE, runs = 9999)
+mpdPhyloMatic=ses.mpd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = FALSE, runs = 9999)
+write.csv(mpdPhyloMatic, file = "mpdPhyloMatic.csv")
+
+
+#Con abundancias#
+
+
+#ses.mntd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = TRUE)
+mntdPhyloMatic_AB=ses.mntd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = TRUE, runs = 9999)
+write.csv(mntdPhyloMatic_AB, file = "mntdPhyloMatic_AB.csv")
+
+#ses.mpd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = TRUE)
+mpdPhyloMatic_AB=ses.mpd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = TRUE, runs = 9999)
+write.csv(mpdPhyloMatic_AB, file = "mpdPhyloMatic_AB.csv")
+
+
+###########################PLOT###################################
+
+win.graph()
+par(mfrow=c(2,2))
+
+plot(c(1:6), mntdPhyloMatic[,7], ylab="NTI", ylim=c(-3,3), col = "purple", cex = 1.1, xaxt="n", xlab="Parcelas", pch=19)
+axis(1, at=c(1:6), as.vector(mntdPhyloMatic[,1]))
+abline(h=0)
+
+title("Filogenia PHYLOMATIC sin abundancias", font.main=13)
+
+plot(c(1:6), mntdPhyloMatic_AB[,7], ylab="NTI",ylim=c(-3,3), col = "purple", cex = 1.1, xaxt="n", xlab="Parcelas", pch=19)
+axis(1, at=c(1:6), as.vector(mntdPhyloMatic_AB[,1]))
+abline(h=0)
+
+title("Filogenia PHYLOMATIC con abundancias", font.main=13)
+
+plot(c(1:6), mpdPhyloMatic[,7], ylab="NRI",ylim=c(-3,3), col = "purple", cex = 1.1, xaxt="n", xlab="Parcelas", pch=19)
+axis(1, at=c(1:6), as.vector(mpdPhyloMatic[,1]))
+abline(h=0)
+
+plot(c(1:6), mpdPhyloMatic_AB[,7], ylab="NRI",ylim=c(-3,3), col = "purple", cex = 1.1, xaxt="n", xlab="Parcelas", pch=19)
+axis(1, at=c(1:6), as.vector(mpdPhyloMatic_AB[,1]))
+abline(h=0)
+
