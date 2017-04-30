@@ -1,50 +1,94 @@
-Library(ape)
-Library(picante)
-Library(phylobase)
-data(phylocom)
 
-read.newick("PhyloMaticBladJ.newick")
-PhyloMatic_Amb<-read.newick("PhyloMaticBladJ.newick")
-PhyloMatic_Amb=collapse.singles(PhyloMatic)
-write.tree(PhyloMaticBladj, file = "PhyloMaticBladj.tre")
-
-ComunidadAB<-read.csv("ComunidadAb.csv", sep = ",", row.names = 1,header = T)
-Comunidad<-read.csv("Comunidad.csv", sep = ",", row.names = 1,header = T)
-
-prune.sample(ComunidadAB, PhyloMatic_Amb)
-
-cophenetic(PhyloMatic_Amb)
-Dis.PhyloMatic=cophenetic(PhyloMatic_Amb)
+#Estructura y diversidad de plantas de Bosque seco tropical en Colombia
+#Agosto 2016/XXXX 2017
 
 
-####################INDICES#########################################
+library(ape)
+library(picante)
 
-#ses.pd(ComunidadAB, PhyloMatic_Amb, null.model = "taxa.labels")
-PD_PhyloMatic=ses.pd(ComunidadAB, PhyloMatic_Amb, null.model = "taxa.labels")
-write.csv(PD_PhyloMatic, file = "PD_PhyloMatic.csv")
+#######################
 
+#Work Directory
 
-#Sin Abundancias#
-
-#ses.mntd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = FALSE, runs = 9999)
-mntdPhyloMatic=ses.mntd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = FALSE, runs = 9999)
-write.csv(mntdPhyloMatic, file = "mntdPhyloMatic.csv")
-
-#ses.mpd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = FALSE, runs = 9999)
-mpdPhyloMatic=ses.mpd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = FALSE, runs = 9999)
-write.csv(mpdPhyloMatic, file = "mpdPhyloMatic.csv")
+setwd("C:/Users/Maria Claudia/Documents/Tesis/Resultados/R")
 
 
-#Con abundancias#
+### Data sets
+
+##Load Community matrix where each rows represents sites and each columns the samples
+#The elements in the matrix should be numerics values with 1/0 for presence/absence or abundance data
+##load phylogeny who is in nexus format
+##Make a match between community and taxa labels with pruned.sample() function
+#NOTE take precaution if some names in community or some taxa labels are removed
+##Generate a distances matrix
+
+comm_AB <- read.csv("ComunidadAb.csv", sep=",", row.names = 1, header = TRUE)
+phylo.rbcL <- read.nexus("Phy_rbcLCal.tre")
+pruned.phylo.rbcL <- prune.sample(comm_AB, phylo.rbcL)
+DIst.phylo.rbcL <- cophenetic(pruned.phylo.rbcL)
 
 
-#ses.mntd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = TRUE)
-mntdPhyloMatic_AB=ses.mntd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = TRUE, runs = 9999)
-write.csv(mntdPhyloMatic_AB, file = "mntdPhyloMatic_AB.csv")
+############################################################
+############# Community phylogenetic structure #############
+############################################################
 
-#ses.mpd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = TRUE)
-mpdPhyloMatic_AB=ses.mpd(ComunidadAB,Dis.PhyloMAtic, null.model = "taxa.labels", abundance.weighted = TRUE, runs = 9999)
-write.csv(mpdPhyloMatic_AB, file = "mpdPhyloMatic_AB.csv")
+#############
+#############
+# 1. 
+
+#phylogenetic diversity (PD)= index proposed by Faith (1992), defined as the total branch length spanned by the tree including all species in a local community.
+
+pd.phylo.rbcL<-pd(comm_AB, phylo.rbcL, include.root = FALSE)
+pd.phylo.rbcL
+
+#estimate mpd (with and without abundances): calculate the will calculate the mean pairwise distance mpd between all species in each community
+
+mpd.phylo.rbcL_AB<-ses.mpd(comm_AB, DIst.phylo.rbcL, null.model = "taxa.labels", abundance.weighted = TRUE)
+mpd.phylo.rbcL_AB
+
+mpd.phylo.rbcL<-ses.mpd(comm_AB, DIst.phylo.rbcL, null.model = "taxa.labels", abundance.weighted = FALSE)
+mpd.phylo.rbcL
+
+# estimate mntd (with and without abundances): calculates the mean nearest taxon distance (MNTD) separating each species in the community from its closest relative
+
+mntd.phylo.rbcL_AB<-ses.mntd(comm_AB, DIst.phylo.rbcL, null.model = "taxa.labels", abundance.weighted = TRUE)
+mntd.phylo.rbcL_AB
+
+mntd.phylo.rbcL<-ses.mntd(comm_AB, DIst.phylo.rbcL, null.model = "taxa.labels", abundance.weighted = FALSE)
+mntd.phylo.rbcL
+
+############### PLOT ###############
+
+
+#############
+#############
+# 2. Repeat same steps above, using a phylogeny generated in phylomatic
+
+phylo.matic <- read.newick("PhyloMatic_Cal.tre")
+phylo.matic
+pruned.phylo.matic <- prune.sample(comm_AB, phylo.matic)
+pruned.phylo.matic
+DIst.phylo.matic <- cophenetic(pruned.phylo.matic)
+
+
+pd.phylo.matic<-pd(comm_AB, phylo.matic, include.root = FALSE)
+pd.phylo.matic
+
+# mpd (with and without abundances)
+
+mpd.phylo.matic_AB<-ses.mpd(comm_AB, DIst.phylo.matic, null.model = "taxa.labels", abundance.weighted = TRUE)
+mpd.phylo.matic_AB
+
+mpd.phylo.matic<-ses.mpd(comm_AB, DIst.phylo.matic, null.model = "taxa.labels", abundance.weighted = FALSE)
+mpd.phylo.matic
+
+# mntd (with and without abundances)
+
+mntd.phylo.matic_AB<-ses.mntd(comm_AB, DIst.phylo.matic, null.model = "taxa.labels", abundance.weighted = TRUE)
+mntd.phylo.matic_AB
+
+mntd.phylo.matic<-ses.mntd(comm_AB, DIst.phylo.matic, null.model = "taxa.labels", abundance.weighted = FALSE)
+mntd.phylo.matic
 
 
 ###########################PLOT###################################
