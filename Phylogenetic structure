@@ -43,18 +43,18 @@ pd.phylo.rbcL
 
 #estimate mpd (with and without abundances): calculate the will calculate the mean pairwise distance mpd between all species in each community
 
-mpd.phylo.rbcL_AB<-ses.mpd(comm_AB, DIst.phylo.rbcL, null.model = "taxa.labels", abundance.weighted = TRUE)
+mpd.phylo.rbcL_AB<-ses.mpd(comm_AB, DIst.phylo.rbcL, null.model = "richness", abundance.weighted = TRUE)
 mpd.phylo.rbcL_AB
 
-mpd.phylo.rbcL<-ses.mpd(comm_AB, DIst.phylo.rbcL, null.model = "taxa.labels", abundance.weighted = FALSE)
+mpd.phylo.rbcL<-ses.mpd(comm_AB, DIst.phylo.rbcL, null.model = "richness", abundance.weighted = FALSE)
 mpd.phylo.rbcL
 
 # estimate mntd (with and without abundances): calculates the mean nearest taxon distance (MNTD) separating each species in the community from its closest relative
 
-mntd.phylo.rbcL_AB<-ses.mntd(comm_AB, DIst.phylo.rbcL, null.model = "taxa.labels", abundance.weighted = TRUE)
+mntd.phylo.rbcL_AB<-ses.mntd(comm_AB, DIst.phylo.rbcL, null.model = "richness", abundance.weighted = TRUE)
 mntd.phylo.rbcL_AB
 
-mntd.phylo.rbcL<-ses.mntd(comm_AB, DIst.phylo.rbcL, null.model = "taxa.labels", abundance.weighted = FALSE)
+mntd.phylo.rbcL<-ses.mntd(comm_AB, DIst.phylo.rbcL, null.model = "richness", abundance.weighted = FALSE)
 mntd.phylo.rbcL
 
 ############### PLOT ###############
@@ -76,18 +76,18 @@ pd.phylo.matic
 
 # mpd (with and without abundances)
 
-mpd.phylo.matic_AB<-ses.mpd(comm_AB, DIst.phylo.matic, null.model = "taxa.labels", abundance.weighted = TRUE)
+mpd.phylo.matic_AB<-ses.mpd(comm_AB, DIst.phylo.matic, null.model = "richness", abundance.weighted = TRUE)
 mpd.phylo.matic_AB
 
-mpd.phylo.matic<-ses.mpd(comm_AB, DIst.phylo.matic, null.model = "taxa.labels", abundance.weighted = FALSE)
+mpd.phylo.matic<-ses.mpd(comm_AB, DIst.phylo.matic, null.model = "richness", abundance.weighted = FALSE)
 mpd.phylo.matic
 
 # mntd (with and without abundances)
 
-mntd.phylo.matic_AB<-ses.mntd(comm_AB, DIst.phylo.matic, null.model = "taxa.labels", abundance.weighted = TRUE)
+mntd.phylo.matic_AB<-ses.mntd(comm_AB, DIst.phylo.matic, null.model = "richness", abundance.weighted = TRUE)
 mntd.phylo.matic_AB
 
-mntd.phylo.matic<-ses.mntd(comm_AB, DIst.phylo.matic, null.model = "taxa.labels", abundance.weighted = FALSE)
+mntd.phylo.matic<-ses.mntd(comm_AB, DIst.phylo.matic, null.model = "richness", abundance.weighted = FALSE)
 mntd.phylo.matic
 
 
