@@ -1,0 +1,16 @@
+setwd("/home/maria/Documentos/Tesis/Resultados/R")
+
+
+comm_AB <- read.csv("ComunidadAb.csv", sep=",", row.names = 1, header = TRUE)
+comm_AB <- as.matrix(comm_AB)
+phylo.rbcL <- read.nexus("Phy_rbcLCal.tre")
+pruned.phylo.rbcL <- prune.sample(comm_AB, phylo.rbcL)
+
+dev.new()
+par(mfrow = c(2,3))
+
+for (i in row.names(comm_AB)) {
+  plot(pruned.phylo.rbcL, show.tip.label = TRUE, main = i, cex = 0.2, edge.width = 0.4, label.offset = 1)
+  tiplabels(tip = which(pruned.phylo.rbcL$tip.label %in% names(which(comm_AB[i,] > 0 ))), pch = 19, cex=0.2, col = "blue")
+}
+
